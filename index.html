@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="style/reset.css">
     <link rel="stylesheet" href="style/style.css">
     <meta content="assets/chef_hat.png" itemprop="image">
@@ -17,13 +18,31 @@
         <input type="text" name="" id="" class="global-search" placeholder="Rechercher une recette">
         <div class="specifics-wrapper">
             <div class="specific-dropdown" id="ingredients">
-                <input type="text" name="" class="specific-search" placeholder="Rechercher un ingrédient">
+                <div class="specific">Ingrédients</div>
+                <div class="search-tags-wrapper">
+                    <input type="text" name="" class="specific-search" placeholder="Rechercher un ingrédient">
+                    <div class="tags"></div>
+                </div>
+                <i class="fas fa-chevron-down"></i>
+				<i class="fas fa-chevron-up"></i>
             </div>
             <div class="specific-dropdown" id="appliances">
-                <input type="text" name="" class="specific-search" placeholder="Rechercher un appareil">
+                <div class="specific">Appareils</div>
+                <div class="search-tags-wrapper">
+                    <input type="text" name="" class="specific-search" placeholder="Rechercher un appareil">
+                    <div class="tags"></div>
+                </div>
+                <i class="fas fa-chevron-down"></i>
+				<i class="fas fa-chevron-up"></i>
             </div>
             <div class="specific-dropdown" id="ustensils">
-                <input type="text" name="" class="specific-search" placeholder="Rechercher un ustensile">
+                <div class="specific">Ustensiles</div>
+                <div class="search-tags-wrapper">
+                    <input type="text" name="" class="specific-search" placeholder="Rechercher un ustensile">
+                    <div class="tags"></div>
+                </div>
+                <i class="fas fa-chevron-down"></i>
+				<i class="fas fa-chevron-up"></i>
             </div>
         </div>
     </header>

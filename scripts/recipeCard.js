@@ -1,6 +1,6 @@
+//
 
-
-export function render(recipe) {
+export function renderRecipeCard(recipe) {
     
     return
     `
