@@ -31,7 +31,7 @@ header * {
 input {
     border-width: 0px;
     border-style: none;
-    padding: 0 25px;
+    padding: 0 70px 0 25px;
     border-radius: 5px;
     height: 70px;
 }
@@ -70,7 +70,7 @@ input:focus::placeholder {
 
 /* dropdowns + inputs spécifiques */
 
-.specifics-tags-wrapper {
+.specifics-selected-tags-wrapper {
     min-height: 130px;
     margin: 20px 0;
 }
@@ -88,8 +88,8 @@ input:focus::placeholder {
     position: relative;
 }
 
-.search-tags-wrapper {
-    display: none;
+.specific-dropdown:last-of-type {
+    margin-right: 0;
 }
 
 .specific {
@@ -98,40 +98,49 @@ input:focus::placeholder {
     align-items: center;
     justify-content: start;
     padding: 0 20px;
+    cursor: pointer;
 }
 
 .specific-dropdown i {
     position: absolute;
-    top: 28px;
-    right: 20px;
+    top: 27px;
+    right: 22px;
+    cursor: pointer;
 }
 
-.specific-dropdown .fa-chevron-up {
+.display-none {
     display: none;
 }
 
-/* .specific-search {
-    color: white;    
-} */
+.specific-search {
+    background-color: inherit;
+    color: inherit;
+    padding-left: 22px;
+    width: 100%;
+}
 
 .specific-search::placeholder {
     font-weight: 700;
     color: lightgray;
 }
 
-#ingredients,
-#ingredients .specific-search {
-    background-color: #3282F7;
+.search-tags-wrapper {
+    background-color: inherit;
+    border-radius: inherit;
 }
 
-#appliances,
-#appliances .specific-search {
-    background-color: #68D9A4;
+.tags {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    text-align: start;
+    padding-bottom: 18px;
 }
 
-#ustensils,
-#ustensils .specific-search {
-    background-color: #ED6454;
+.tag {
+    cursor: pointer;
+    width: 225px;
+    padding: 5px 5px 5px 25px;
 }
 
 
@@ -143,7 +152,7 @@ main {
 }
 
 .recipe {
-    width: calc((100% - (2 * 50px)) / 3); /* - espaces */
+    width: calc((100% - (2 * 50px)) / 3); /* - espaces margins */
     height: 364px;
     margin-bottom: 50px;
     margin-right: 50px;
