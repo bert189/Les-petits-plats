@@ -10,8 +10,8 @@ export function tagCountObserver(dropdown) {
     
         if (tagCount > 15) { 
         
-            tagList.style.width = "450px"; // 450px  = 2 * 225px (largeur d'un tag)
-            // permet 2 dropdown à 2 colonnes + 1 à 1 colonne (sur container de 1240px)
+            tagList.style.width = "410px"; // 410px  = 2 * 205px (largeur moyenne d'un tag)
+            // permet 2 dropdown à 2 colonnes + 2 à 1 colonne (sur container de 1240px)
         
             if (tagCount % 2 === 1) {
                 const tagListMAxHeight = ((tagCount + 1) / 2 ) * 32 + 18;

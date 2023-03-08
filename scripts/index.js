@@ -2,9 +2,11 @@
 
 import { getAPI } from "./api/api.js";
 import { renderRecipeCard } from "./components/renderRecipeCard.js";
-import { truncateText } from "./utils/truncate.js";
-import { dropdownDisplay } from "./utils/dropdownDisplay.js";
 import { renderDropdown } from "./components/renderDropdown.js";
+import { compareStringsFrench } from "./utils/frenchSort.js";
+import { truncateText } from "./utils/truncate.js";
+import { dropdownBehaviour } from "./behaviours/dropdownBehaviour.js";
+import { tagBehaviour } from "./behaviours/tagBehaviour.js"; 
 
 
 //  url API
@@ -33,14 +35,14 @@ async function init() {
 			}
 		})
 		return acc;
-	}, []).sort();
+	}, []).sort(compareStringsFrench);
 
 	const appliances = recipes.reduce((acc, recipe) => {		
 		if (!acc.includes(recipe.appliance)) {
 			acc.push(recipe.appliance);
 		}
 		return acc;
-	}, []).sort();
+	}, []).sort(compareStringsFrench);
 
 	const ustensils = recipes.reduce((acc, recipe) => {
 		recipe.ustensils.forEach(ustensil => {
@@ -49,14 +51,24 @@ async function init() {
 			}
 		});
 		return acc;
-	}, []).sort();
+	}, []).sort(compareStringsFrench);
+
+	const timesIntegers = recipes.reduce((acc, recipe) => {
+		if (!acc.includes(recipe.time)) {
+			acc.push(recipe.time);
+		}
+		return acc;
+	}, []).sort((a, b) => a - b);
+	const times = timesIntegers.map(int => `${int.toString()} min`);
+
 	
-	// affichage tags dropdowns
+	// création des dropdowns
 	const specificsWrapper = document.querySelector(".specifics-wrapper");
 
-	specificsWrapper.innerHTML += renderDropdown("Ingrédients", "ingredients", "Rechercher un ingredient", "#3282F7", ingredients);
-	specificsWrapper.innerHTML += renderDropdown("Appareils", "appliances", "Rechercher un appareil", "#5dc292", appliances);
-	specificsWrapper.innerHTML += renderDropdown("Ustensiles", "ustensils", "Rechercher un ustensile", "#ED6454", ustensils);
+	specificsWrapper.innerHTML += renderDropdown("Ingrédients", "ingredients", "#3282F7", "ingredient", "5", ingredients);
+	specificsWrapper.innerHTML += renderDropdown("Appareils", "appliances", "#5dc292", "appareil", "5", appliances);
+	specificsWrapper.innerHTML += renderDropdown("Ustensiles", "ustensils", "#ED6454", "ustensile", "5", ustensils);
+	specificsWrapper.innerHTML += renderDropdown("Temps", "time", "#b075bd", "temps", "5", times);
 	
 
 	// affichage recettes 
@@ -70,8 +82,11 @@ async function init() {
 		description.textContent = truncateText(description.textContent.trim(), 200);
 	})
 
-	// ouverture dropdowns
-	dropdownDisplay();
+	// ouverture/fermeture/affichage dropdowns
+	dropdownBehaviour();
+
+	// recherche et selection des tags
+	tagBehaviour();
 
 	// fonction recherche
 	
