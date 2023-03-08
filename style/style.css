@@ -165,10 +165,7 @@ input:focus::placeholder {
 
 .selected-tags {
     display: flex;
-}
-
-.selected-category {
-    display: flex;
+    flex-wrap: wrap;
 }
 
 .selected-tag {
@@ -183,6 +180,11 @@ input:focus::placeholder {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.selected-tag .fa-times-circle {
+    cursor: pointer;
+    margin-left: 8px;
 }
 
 /* MAIN */

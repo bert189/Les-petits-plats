@@ -1,5 +1,6 @@
 // imports
 import { tagCountObserver } from "../utils/tagCountObserver.js";
+import { selectTag } from "./tagBehaviour.js";
 
 // cette fonction gère l'affichage + les events des dropdowns aux clics
 
@@ -14,8 +15,8 @@ export function dropdownBehaviour() {
         const specific = dropdown.querySelector(".specific");
         const specificChevronDown = [specific, chevronDown];
         const searchTags = dropdown.querySelector(".search-tags-wrapper");
-        const inputTagSearch = dropdown.querySelector(".specific-search");        
-
+        const inputTagSearch = dropdown.querySelector(".specific-search");
+        
 
         // change le chevron de sens
         function swapChevron() {
@@ -60,7 +61,7 @@ export function dropdownBehaviour() {
         // Ajouter un écouteur d'événement de clic au document pour le clic à l'extérieur
         document.addEventListener('click', (event) => {
             // Vérifier si l'élément cliqué n'est pas un élément dropdown
-            if (chevronDown.classList.contains("display-none") && !Array.from(dropdowns).some(dropdown => dropdown.contains(event.target))) {
+            if (chevronDown.classList.contains("display-none") && !Array.from(dropdowns).some(dropdown => dropdown.contains(event.target))) {  // some()
                 searchTags.classList.add("display-none");
                 specific.classList.remove("display-none");
                 swapChevron();
@@ -83,7 +84,7 @@ export function dropdownBehaviour() {
                 return tag.innerText.toLowerCase().includes(value);
             });
             // mettre à jour l'affichage des tags
-            tagsContainer.innerHTML = ""
+            tagsContainer.innerHTML = "";
             filteredTags.forEach(tag => tagsContainer.appendChild(tag));            
         }
         
@@ -91,6 +92,20 @@ export function dropdownBehaviour() {
         inputTagSearch.addEventListener('input', function() {
             const searchValue = inputTagSearch.value.toLowerCase();
             filterTags(searchValue);
+        });
+
+        // au clic sur un tag dans le dropdown
+        tagArray.forEach(tag => {
+            tag.addEventListener("click", function(){
+                const selectedTag = {
+                    "name": `${tag.innerText}`,
+                    "color": `${dropdown.style.backgroundColor}`
+                }
+
+                selectTag(selectedTag);
+            })
+
+
         });
 
 

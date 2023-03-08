@@ -6,7 +6,6 @@ import { renderDropdown } from "./components/renderDropdown.js";
 import { compareStringsFrench } from "./utils/frenchSort.js";
 import { truncateText } from "./utils/truncate.js";
 import { dropdownBehaviour } from "./behaviours/dropdownBehaviour.js";
-import { tagBehaviour } from "./behaviours/tagBehaviour.js"; 
 
 
 //  url API
@@ -82,11 +81,8 @@ async function init() {
 		description.textContent = truncateText(description.textContent.trim(), 200);
 	})
 
-	// ouverture/fermeture/affichage dropdowns
+	// ouverture/fermeture/affichage dropdowns (inclus la recherche et selection des tags)
 	dropdownBehaviour();
-
-	// recherche et selection des tags
-	tagBehaviour();
 
 	// fonction recherche
 	
