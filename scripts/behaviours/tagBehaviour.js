@@ -19,7 +19,7 @@ function deleteTagSelected(tag) {
 
 // au clic sur la croix d'un tag selectionné
 
-selectedTags.forEach(tag => {
-    const closeCross = tag.querySelector(".fa-times-circle");
-    closeCross.addEventListener("click", deleteTagSelected(tag));
-})
+// selectedTags.forEach(tag => {
+//     const closeCross = tag.querySelector(".fa-times-circle");
+//     closeCross.addEventListener("click", deleteTagSelected(tag));
+// })
