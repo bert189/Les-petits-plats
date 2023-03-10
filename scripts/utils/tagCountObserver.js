@@ -4,8 +4,10 @@ export function tagCountObserver(dropdown) {
 
     // sélectionnez l'élément à observer
     const tagList = dropdown.querySelector(".tags");
+    const tagListPadding = parseInt(getComputedStyle(tagList).paddingBottom);
+    const tagHeight = dropdown.querySelector(".tag").offsetHeight;
 
-    function setColumnTags() {
+    function setColumnTags() {        
         const tagCount = tagList.childElementCount;
     
         if (tagCount > 15) { 
@@ -14,11 +16,11 @@ export function tagCountObserver(dropdown) {
             // permet 2 dropdown à 2 colonnes + 2 à 1 colonne (sur container de 1240px)
         
             if (tagCount % 2 === 1) {
-                const tagListMAxHeight = ((tagCount + 1) / 2 ) * 32 + 18;
+                const tagListMAxHeight = ((tagCount + 1) / 2 ) * tagHeight + tagListPadding;
                 tagList.style.maxHeight = `${tagListMAxHeight.toString()}px`;
             }
             else {
-                const tagListMAxHeight = ((tagCount) / 2 ) * 32 + 18;
+                const tagListMAxHeight = ((tagCount) / 2 ) * tagHeight + tagListPadding;
                 tagList.style.maxHeight = `${tagListMAxHeight.toString()}px`;
             }
         }
@@ -32,7 +34,7 @@ export function tagCountObserver(dropdown) {
     // à l'ouverture du dropdown
     setColumnTags();
 
-    // OBSERVER (merci CHATGPT) réagit à chaque modification de tagList :
+    // OBSERVER (merci chatGPT) réagit à chaque modification de tagList :
     // options de configuration de l'observer
     const config = { childList: true };
 

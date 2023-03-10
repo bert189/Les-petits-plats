@@ -149,7 +149,6 @@ input:focus::placeholder {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    /* text-align: start; */
     padding: 0 10px 15px;
     
 }
@@ -161,9 +160,19 @@ input:focus::placeholder {
     padding: 5px 5px 5px 10px;
 }
 
+.already-selected {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
 /* Tags selectionnés */
 
 .selected-tags {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.selected-tags-family {
     display: flex;
     flex-wrap: wrap;
 }
@@ -185,6 +194,7 @@ input:focus::placeholder {
 .selected-tag .fa-times-circle {
     cursor: pointer;
     margin-left: 8px;
+    z-index: 10;
 }
 
 /* MAIN */

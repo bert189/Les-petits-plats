@@ -65,9 +65,9 @@ async function init() {
 	const specificsWrapper = document.querySelector(".specifics-wrapper");
 
 	specificsWrapper.innerHTML += renderDropdown("Ingrédients", "ingredients", "#3282F7", "ingredient", "5", ingredients);
-	specificsWrapper.innerHTML += renderDropdown("Appareils", "appliances", "#5dc292", "appareil", "5", appliances);
+	specificsWrapper.innerHTML += renderDropdown("Appareils", "appliances", "#5dc292", "appareil", "5", appliances, true);
 	specificsWrapper.innerHTML += renderDropdown("Ustensiles", "ustensils", "#ED6454", "ustensile", "5", ustensils);
-	specificsWrapper.innerHTML += renderDropdown("Temps", "time", "#b075bd", "temps", "5", times);
+	specificsWrapper.innerHTML += renderDropdown("Temps", "times", "#b075bd", "temps", "5", times, true);
 	
 
 	// affichage recettes 

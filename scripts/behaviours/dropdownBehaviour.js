@@ -1,12 +1,15 @@
 // imports
 import { tagCountObserver } from "../utils/tagCountObserver.js";
-import { selectTag } from "./tagBehaviour.js";
+import { renderTagSelected } from "../components/renderTagSelected.js";
+import { createElement } from "../utils/createElement.js";
+
 
 // cette fonction gère l'affichage + les events des dropdowns aux clics
 
 export function dropdownBehaviour() {
 
 	const dropdowns = document.querySelectorAll(".specific-dropdown");
+    const selectedTags = document.querySelector(".selected-tags");
 
     dropdowns.forEach(dropdown => {
 
@@ -15,9 +18,11 @@ export function dropdownBehaviour() {
         const specific = dropdown.querySelector(".specific");
         const specificChevronDown = [specific, chevronDown];
         const searchTags = dropdown.querySelector(".search-tags-wrapper");
-        const inputTagSearch = dropdown.querySelector(".specific-search");
-        
+        const inputTagSearch = dropdown.querySelector(".specific-search");        
 
+
+        // HELPERS
+        
         // change le chevron de sens
         function swapChevron() {
             if (!chevronDown.classList.contains("display-none")) {
@@ -36,7 +41,8 @@ export function dropdownBehaviour() {
         }
         
 
-        // EVENTS :
+        // EVENTS DROPDOWN :
+
         // au clic sur la partie visible du dropdown fermé -> ouverture
         specificChevronDown.forEach(element => {
             element.addEventListener("click", function() {
@@ -61,14 +67,20 @@ export function dropdownBehaviour() {
         // Ajouter un écouteur d'événement de clic au document pour le clic à l'extérieur
         document.addEventListener('click', (event) => {
             // Vérifier si l'élément cliqué n'est pas un élément dropdown
-            if (chevronDown.classList.contains("display-none") && !Array.from(dropdowns).some(dropdown => dropdown.contains(event.target))) {  // some()
+            if (chevronDown.classList.contains("display-none")
+                && !Array.from(dropdowns).some(dropdown => dropdown.contains(event.target)) // some()
+                && !event.target.closest('.selected-tag, .fa-times-circle, .dropdown') ) { // closest()
                 searchTags.classList.add("display-none");
                 specific.classList.remove("display-none");
                 swapChevron();
                 clearInput();
                 resetTags();
             }
+
         });
+
+
+        // EVENTS SEARCH :
 
         // lorsque l'utilisateur entre des caractères dans le champs de recheche -> filtre les tags
         const tagsContainer = dropdown.querySelector(".tags");
@@ -94,24 +106,71 @@ export function dropdownBehaviour() {
             filterTags(searchValue);
         });
 
+        
+        // EVENTS TAGS :
+
+        // création des conteneurs de famille de tag selectionnés
+        const selectedTagsFamily = createElement("div", {class: "selected-tags-family", id:`${dropdown.id}`});
+        selectedTags.appendChild(selectedTagsFamily);
+        
+        // affichage du tag selectionné
+        function selectTag(tag) {
+            tag.classList.add("already-selected");
+            const selectedTag = {
+                "id": `${tag.id}-selected`,
+                "name": `${tag.innerText}`,
+                "color": `${dropdown.style.backgroundColor}`                
+            }
+            selectedTagsFamily.innerHTML += renderTagSelected(selectedTag);
+        }
+
+        // suppression d'un tag selectionné
+        function unselectTag(tag) {
+            selectedTagsFamily.removeChild(tag); // tag.parentNode.removeChild(tag);
+            const correspondingTag = tagArray.find(correspondingTag => correspondingTag.id === tag.id.slice(0, -9));
+            correspondingTag.classList.remove("already-selected");
+        }
+
         // au clic sur un tag dans le dropdown
         tagArray.forEach(tag => {
-            tag.addEventListener("click", function(){
-                const selectedTag = {
-                    "name": `${tag.innerText}`,
-                    "color": `${dropdown.style.backgroundColor}`
-                }
-
-                selectTag(selectedTag);
+            tag.addEventListener("click", function() {
+                selectTag(tag);
             })
-
-
         });
-
-
+    
+        // mise à jour de le liste des tags selectionnés (via observer)
+        function updatedTagSelection() {
+            const currentTagSelection = Array.from(selectedTagsFamily.querySelectorAll(".selected-tag"));
+            return currentTagSelection;
+        }
+        // OBSERVER (merci CHATGPT) réagit à chaque modification de tagList :
+        // options de configuration de l'observer
+        const config = { childList: true };
+        // fonction de rappel appelée à chaque changement dans la liste des tags selectionnés 
+        const callback = function(mutationsList) {
+            for(const mutation of mutationsList) {
+                if (mutation.type === 'childList') {
+                    updatedTagSelection();                              
+                    console.log(updatedTagSelection());
+                    // au clic sur la croix d'un tag selectionné
+                    updatedTagSelection().forEach(tag => {
+                        const closeCross = tag.querySelector(".fa-times-circle");
+                        closeCross.addEventListener("click", function() {
+                            if (selectedTagsFamily.contains(tag) && tag.parentNode !== null) {                                
+                                unselectTag(tag);
+                            }
+                        });
+                    });  
+                }
+            };
+        }
+        // création de l'observer avec la fonction de rappel et les options de configuration
+        const observer = new MutationObserver(callback);
+        observer.observe(selectedTagsFamily, config);
 
 
 
     })
-    
+
+
 } 
