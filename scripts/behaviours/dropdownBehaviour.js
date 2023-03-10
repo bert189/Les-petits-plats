@@ -50,7 +50,7 @@ export function dropdownBehaviour() {
                 searchTags.classList.remove("display-none");
                 swapChevron();              
                 tagCountObserver(dropdown);
-                // inputTagSearch.focus();
+                inputTagSearch.focus(); // optionnel, permet d'encourager la recherche
             })
         })
         
@@ -110,11 +110,17 @@ export function dropdownBehaviour() {
         // EVENTS TAGS :
 
         // création des conteneurs de famille de tag selectionnés
-        const selectedTagsFamily = createElement("div", {class: "selected-tags-family", id:`${dropdown.id}`});
-        selectedTags.appendChild(selectedTagsFamily);
+        const selectedTagsFamily = createElement("div", {class: "selected-tags-family", id:`${dropdown.id}-selected`});
+        selectedTags.appendChild(selectedTagsFamily);      
         
         // affichage du tag selectionné
         function selectTag(tag) {
+            if (dropdown.classList.contains("unique-tag-choice") && selectedTagsFamily.childNodes.length > 0) {
+                // si le choix de tag est unique, il faut préalablement supprimer le choix déjà éxistant
+                const currentTag = selectedTagsFamily.firstElementChild;
+                unselectTag(currentTag);
+                tag.classList.add("already-selected");
+            }
             tag.classList.add("already-selected");
             const selectedTag = {
                 "id": `${tag.id}-selected`,
@@ -123,12 +129,13 @@ export function dropdownBehaviour() {
             }
             selectedTagsFamily.innerHTML += renderTagSelected(selectedTag);
         }
+        
 
         // suppression d'un tag selectionné
-        function unselectTag(tag) {
-            selectedTagsFamily.removeChild(tag); // tag.parentNode.removeChild(tag);
-            const correspondingTag = tagArray.find(correspondingTag => correspondingTag.id === tag.id.slice(0, -9));
+        function unselectTag(selectedTag) {
+            const correspondingTag = tagArray.find(correspondingTag => correspondingTag.id === selectedTag.id.slice(0, -9));
             correspondingTag.classList.remove("already-selected");
+            selectedTagsFamily.removeChild(selectedTag); // tag.parentNode.removeChild(tag);
         }
 
         // au clic sur un tag dans le dropdown
@@ -150,8 +157,8 @@ export function dropdownBehaviour() {
         const callback = function(mutationsList) {
             for(const mutation of mutationsList) {
                 if (mutation.type === 'childList') {
-                    updatedTagSelection();                              
-                    console.log(updatedTagSelection());
+                    updatedTagSelection();                          
+                    console.log(`${selectedTagsFamily.id}: `, updatedTagSelection());
                     // au clic sur la croix d'un tag selectionné
                     updatedTagSelection().forEach(tag => {
                         const closeCross = tag.querySelector(".fa-times-circle");

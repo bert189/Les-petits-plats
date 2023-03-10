@@ -101,6 +101,12 @@ input:focus::placeholder {
     cursor: pointer;
 }
 
+.specific:hover {
+    text-shadow: 0px 0px 3px white;
+    transition-property: text-shadow;
+    transition-duration: 100ms;
+}
+
 .specific-dropdown .fa-chevron-down,
 .specific-dropdown .fa-chevron-up {
     position: absolute;
@@ -160,9 +166,19 @@ input:focus::placeholder {
     padding: 5px 5px 5px 10px;
 }
 
+.tag:hover {
+    text-shadow: 0px 0px 3px white;
+    transition-property: text-shadow;
+    transition-duration: 100ms;
+}
+
 .already-selected {
     pointer-events: none;
-    opacity: 0.5;
+    opacity: 0.44;
+}
+
+.tag.already-selected:hover {
+    text-shadow: unset;
 }
 
 /* Tags selectionnés */
