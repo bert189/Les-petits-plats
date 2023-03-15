@@ -4,8 +4,8 @@ import { getAPI } from "./api/api.js";
 import { renderRecipeCard } from "./components/renderRecipeCard.js";
 import { renderDropdown } from "./components/renderDropdown.js";
 import { compareStringsFrench } from "./utils/frenchSort.js";
-import { truncateText } from "./utils/truncate.js";
 import { dropdownBehaviour } from "./behaviours/dropdownBehaviour.js";
+import { filterRecipes } from "./businessLogic/filterRecipes.js";
 
 
 //  url API
@@ -22,10 +22,10 @@ const main = document.querySelector("main");
 
 async function init() {
 	
-	// récupération data API
+	// 1. récupération data API
 	const recipes = await getAPI(api_url);
 	
-	// création des array ingredients + appliances + ustensils
+	// 2. création des array ingredients + appliances + ustensils
 
 	const ingredients = recipes.reduce((acc, recipe) => {
 		recipe.ingredients.forEach(ingredient => {
@@ -61,8 +61,11 @@ async function init() {
 	const times = timesIntegers.map(int => `${int.toString()} min`);
 
 	
-	// création des dropdowns
+	// 3. création des dropdowns
 	const specificsWrapper = document.querySelector(".specifics-wrapper");
+
+	// renderDropdown(specificName, id, backgroundColor, placeholder, size, tagList, uniqueTagChoice)
+	//                  "string"  "string"   "string"      "string"  "string" array    boolean
 
 	specificsWrapper.innerHTML += renderDropdown("Ingrédients", "ingredients", "#3282F7", "ingredient", "5", ingredients);
 	specificsWrapper.innerHTML += renderDropdown("Appareils", "appliances", "#5dc292", "appareil", "5", appliances, true);
@@ -70,22 +73,18 @@ async function init() {
 	specificsWrapper.innerHTML += renderDropdown("Temps", "times", "#b075bd", "temps", "5", times, true);
 	
 
-	// affichage recettes 
+	// 4. affichage recettes 
 	recipes.forEach(function(recipe) {
 		main.innerHTML += renderRecipeCard(recipe);
 	})
 
-	const descriptions = main.querySelectorAll(".description");
 
-	descriptions.forEach(function(description) {
-		description.textContent = truncateText(description.textContent.trim(), 200);
-	})
-
-	// ouverture/fermeture/affichage dropdowns (inclus la recherche et selection des tags)
+	// 5. ouverture/fermeture/affichage dropdowns (inclus la recherche et selection des tags)
 	dropdownBehaviour();
 
-	// fonction recherche
 	
+	// 6. fonction recherche - filtrage des recettes
+	filterRecipes();
 
 
     

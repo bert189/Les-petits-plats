@@ -1,6 +1,6 @@
 // gestion de l'affichage longue liste sur 1 ou 2 colonnes
 
-export function tagCountObserver(dropdown) {
+export function tagCountObserver(dropdown, cutLimit) {
 
     // sélectionnez l'élément à observer
     const tagList = dropdown.querySelector(".tags");
@@ -10,7 +10,7 @@ export function tagCountObserver(dropdown) {
     function setColumnTags() {        
         const tagCount = tagList.childElementCount;
     
-        if (tagCount > 15) { 
+        if (tagCount > cutLimit) { 
         
             tagList.style.width = "410px"; // 410px  = 2 * 205px (largeur moyenne d'un tag)
             // permet 2 dropdown à 2 colonnes + 2 à 1 colonne (sur container de 1240px)

@@ -1,4 +1,8 @@
-//
+// import
+
+import { truncateText } from "../utils/truncate.js";
+
+// création HTML card recette
 
 export function renderRecipeCard(recipe) {
 
@@ -25,6 +29,8 @@ export function renderRecipeCard(recipe) {
         }
 
     });
+
+    recipe.description = truncateText(recipe.description.trim(), 200);
     
     return `
         <article class="recipe" id="${recipe.id}">

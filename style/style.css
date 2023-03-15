@@ -174,7 +174,7 @@ input:focus::placeholder {
 
 .already-selected {
     pointer-events: none;
-    opacity: 0.44;
+    opacity: 0.42;
 }
 
 .tag.already-selected:hover {

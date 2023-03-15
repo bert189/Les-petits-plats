@@ -9,6 +9,7 @@ import { createElement } from "../utils/createElement.js";
 export function dropdownBehaviour() {
 
 	const dropdowns = document.querySelectorAll(".specific-dropdown");
+    const mainSearch = document.querySelector(".global-search");
     const selectedTags = document.querySelector(".selected-tags");
 
     dropdowns.forEach(dropdown => {
@@ -49,7 +50,7 @@ export function dropdownBehaviour() {
                 specific.classList.add("display-none");
                 searchTags.classList.remove("display-none");
                 swapChevron();              
-                tagCountObserver(dropdown);
+                tagCountObserver(dropdown, 15); // présentation 1 ou 2 colonnes au delà du nombre indiqué
                 inputTagSearch.focus(); // optionnel, permet d'encourager la recherche
             })
         })
@@ -80,7 +81,7 @@ export function dropdownBehaviour() {
         });
 
 
-        // EVENTS SEARCH :
+        // EVENT DROPDOWN SEARCH :
 
         // lorsque l'utilisateur entre des caractères dans le champs de recheche -> filtre les tags
         const tagsContainer = dropdown.querySelector(".tags");
@@ -104,6 +105,16 @@ export function dropdownBehaviour() {
         inputTagSearch.addEventListener('input', function() {
             const searchValue = inputTagSearch.value.toLowerCase();
             filterTags(searchValue);
+        });
+
+
+        // EVENT MAIN SEARCH :
+
+        // eventListener 'input' éxécute son callback à chaque changement de value de l'input
+        mainSearch.addEventListener('input', function() {
+            const mainSearchValue = mainSearch.value.toLowerCase();
+            // filterTags(searchValue);
+            console.log(mainSearchValue)
         });
 
         
@@ -150,7 +161,7 @@ export function dropdownBehaviour() {
             const currentTagSelection = Array.from(selectedTagsFamily.querySelectorAll(".selected-tag"));
             return currentTagSelection;
         }
-        // OBSERVER (merci CHATGPT) réagit à chaque modification de tagList :
+        // OBSERVER (merci ChatGPT) réagit à chaque modification de tagList :
         // options de configuration de l'observer
         const config = { childList: true };
         // fonction de rappel appelée à chaque changement dans la liste des tags selectionnés 
