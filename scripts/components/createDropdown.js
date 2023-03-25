@@ -1,6 +1,6 @@
 // 
 
-export function renderDropdown(specificName, id, backgroundColor, placeholder, size, tagList, uniqueTagChoice) {
+export function createDropdown(specificName, id, backgroundColor, placeholder, size, tagList, uniqueTagChoice) {
 
     const singularSpecific = id.slice(0, -1);
     let HTMLtagList = '';

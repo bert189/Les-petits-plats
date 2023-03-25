@@ -9,7 +9,6 @@ import { createElement } from "../utils/createElement.js";
 export function dropdownBehaviour() {
 
 	const dropdowns = document.querySelectorAll(".specific-dropdown");
-    const mainSearch = document.querySelector(".global-search");
     const selectedTags = document.querySelector(".selected-tags");
 
     dropdowns.forEach(dropdown => {
@@ -105,16 +104,6 @@ export function dropdownBehaviour() {
         inputTagSearch.addEventListener('input', function() {
             const searchValue = inputTagSearch.value.toLowerCase();
             filterTags(searchValue);
-        });
-
-
-        // EVENT MAIN SEARCH :
-
-        // eventListener 'input' éxécute son callback à chaque changement de value de l'input
-        mainSearch.addEventListener('input', function() {
-            const mainSearchValue = mainSearch.value.toLowerCase();
-            // filterTags(searchValue);
-            console.log(mainSearchValue)
         });
 
         

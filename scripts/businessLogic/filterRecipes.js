@@ -1,56 +1,5 @@
 
-// MAIN SEARCH OBSERVER :
-
-// détection de changement dans le champ de recherche principal
-
-
-// récupération de la chaine de 3 caractères ou +
-
-
-// généréer la liste filtrée relative à cette string
-const filteredListSearch = [
-    // id, id, id
-]
-
-
-
-// insérer la liste filtrée ou remplacer la liste filtrée 'mainSearch' éxistante 
-function updateMainSearchList(list) {
-    console.log(list);
-    return list;
-    //
-};
-
-updateMainSearchList(filteredListSearch);
-
-
-// /!\ A INCLURE DANS LE COMPORTEMENT DES DROPDOWNS : /!\
-
-// chercher dans la liste filtrée quels tags de chaque famille specifique éxistent
-// afficher seulement ces tags dans chaques dropdowns en fonction de la valeur de l'input mainSearch
-// en cas de search vide (ou moins de 3 caractères), remettre tous les tags  
-
-
-
-
-
-
-
-
-// TAG SELECTION OBSERVER :
-
-// détecteur d'action sur la selection de tags (selection ou suppression)
-
-
-// isolation de la famille et du nom du tag (ajouté ou supprimé)
-
-
-// création ou suppresion de liste filtrée correspondant au tag
-
-
-
-
-
+import { renderAlldropdowns, renderAllRecipes } from "../index.js";
 
 
 
@@ -58,11 +7,11 @@ updateMainSearchList(filteredListSearch);
 // CALCUL ET AFFICHAGE LISTE RECETTES CROISEES :
 
 // fonction qui permet le filtrage des recettes :
-export function filterRecipes() {
+export function filterRecipes(recipes) {
 
     // collection de listes filtrées qui s'actualise
     
-    let listsCollection = {
+    let recipesListsCollection = {
         mainSearch: [],
         // tagID1: [id, id, id, id, id],
         // tagID2: [id, id],
@@ -72,19 +21,71 @@ export function filterRecipes() {
     // calcul de l'intersection des listes filtrée (croisement)
     
     function intersection(lists) {
-        console.log(lists);
-        return lists
+        const setList = [];
+
+        // ...
+
+        return setList
     };
 
-    function updateRecipesDisplay(list) {
-        console.log(list);
-        return list
-    };
 
-    // observer sur la collection de listes
-    // à chaque changement dans la collection : executer intersection() + updateRecipesDisplay()
+    // EVENT MAIN SEARCH :
 
-    updateRecipesDisplay(intersection(listsCollection));
+    const mainSearch = document.querySelector(".global-search");
+
+    // eventListener 'input' éxécute son callback à chaque changement de value de l'input
+    mainSearch.addEventListener('input', function() {
+
+        // récupération de la chaine de 3 caractères ou +
+        const minCharacters = 3;
+
+        const mainSearchValue = mainSearch.value.toLowerCase();
+            if (mainSearchValue.length >= minCharacters) {
+                console.log(mainSearchValue)
+
+
+
+                // détermner les recettes correspondantes à la valeur de l'input
+
+                // .... fonction qui filtres les recettes correspondantes à la valeur de l'input
+                // recipes.foreach() ....
+                // généréer la liste filtrée relative à cette string
+                const filteredRecipesList = [
+                    // id, id, id
+                ]
+
+                // mise à jour de 'mainsearch' dans la collection de listes
+                recipesListsCollection.mainSearch = filteredRecipesList
+
+                // mise à jour de l'affichage des recettes à chaque changement de valeur        
+                renderAllRecipes(intersection(recipesListsCollection));
+
+
+                // afficher seulement ces tags de la dans chaques dropdowns en fonction de la valeur de l'input mainSearch
+                renderAlldropdowns(intersection(recipesListsCollection));
+            }
+            else {
+                // en cas de search vide (ou moins de 3 caractères), remettre tous les tags
+            }        
+        
+
+    });
+
+
+
+
+    // TAG SELECTION OBSERVER :
+    // /!\ possible de récupérer la liste des tags selectionnés depuis l'observer de dropdownBehaviour()
+
+    // détecteur d'action sur la selection de tags (selection ou suppression)
+
+
+    // isolation de la famille et du nom du tag (ajouté ou supprimé)
+
+
+    // création ou suppresion de liste filtrée correspondant au tag
+
+
 
 
 }
