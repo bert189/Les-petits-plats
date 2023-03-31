@@ -17,8 +17,9 @@ export function dropdownBehaviour() {
         const chevronUp = dropdown.querySelector(".fa-chevron-up");
         const specific = dropdown.querySelector(".specific");
         const specificChevronDown = [specific, chevronDown];
+        const arrayTags = Array.from(dropdown.querySelectorAll(".tags .tag"));
         const searchTags = dropdown.querySelector(".search-tags-wrapper");
-        const inputTagSearch = dropdown.querySelector(".specific-search");        
+        const inputTagSearch = dropdown.querySelector(".specific-search");
 
 
         // HELPERS
@@ -44,15 +45,25 @@ export function dropdownBehaviour() {
         // EVENTS DROPDOWN :
 
         // au clic sur la partie visible du dropdown fermé -> ouverture
-        specificChevronDown.forEach(element => {
-            element.addEventListener("click", function() {
-                specific.classList.add("display-none");
-                searchTags.classList.remove("display-none");
-                swapChevron();              
-                tagCountObserver(dropdown, 15); // présentation 1 ou 2 colonnes au delà du nombre indiqué
-                inputTagSearch.focus(); // optionnel, permet d'encourager la recherche
-            })
-        })
+
+        if (arrayTags.length === 0) { // cas ou la recherhce ne donne aucun résultat
+            dropdown.classList.add("no-tags");
+            specific.classList.add("specific-inactive");
+            chevronDown.classList.add("specific-inactive");
+        }
+        else {
+            specificChevronDown.forEach(element => {
+                element.addEventListener("click", function() {
+                    
+                    specific.classList.add("display-none");
+                    searchTags.classList.remove("display-none");
+                    swapChevron();             
+                    tagCountObserver(dropdown, 15); // présentation 1 ou 2 colonnes au delà du nombre indiqué
+                    inputTagSearch.focus(); // optionnel, permet d'encourager la recherche
+
+                })
+            })            
+        }
         
         // au clic sur le chevron up -> fermeture
         chevronUp.addEventListener('click', function() {
@@ -66,7 +77,7 @@ export function dropdownBehaviour() {
         // au clic en dehors des dropdowns (et des tagSelected) -> fermeture
         // Ajouter un écouteur d'événement de clic au document pour le clic à l'extérieur
         document.addEventListener('click', (event) => {
-            // Vérifier si l'élément cliqué n'est pas un élément dropdown
+            // Vérifier si l'élément cliqué n'est pas un élément dropdown, ou un tag selectionné
             if (chevronDown.classList.contains("display-none")
                 && !Array.from(dropdowns).some(dropdown => dropdown.contains(event.target)) // some()
                 && !event.target.closest('.selected-tag, .fa-times-circle, .dropdown') ) { // closest()

@@ -1,5 +1,4 @@
 // imports
-
 import { getAPI } from "./api/api.js";
 import { renderRecipeCard } from "./components/renderRecipeCard.js";
 import { createDropdown } from "./components/createDropdown.js";
@@ -9,14 +8,11 @@ import { filterRecipes } from "./businessLogic/filterRecipes.js";
 
 
 //  url API
-
 const api_url = "datas/recipes.json";
 
 
 // DOM variables
-
 const main = document.querySelector("main");
-
 
 // création des array ingredients + appliances + ustensils + times
 export function tagLists(recipes) {
@@ -42,7 +38,7 @@ export function tagLists(recipes) {
 
 	});
 
-	return {
+	return { // Set()
 		"ingredients": new Set(ingredients.sort(compareStringsFrench)),
 		"appliances": new Set(appliences.sort(compareStringsFrench)),
 		"ustensils": new Set(ustensils.sort(compareStringsFrench)),
@@ -86,13 +82,23 @@ export function renderAlldropdowns(recipes) {
 	renderDropdown("appliances", tagLists(recipes).appliances);
 	renderDropdown("ustensils", tagLists(recipes).ustensils);
 	renderDropdown("times", tagLists(recipes).times);
+	
+	// ouverture/fermeture/affichage dropdowns (inclus la recherche et selection des tags)
+	dropdownBehaviour();
 }
 
 // affichage des recettes
 export function renderAllRecipes(recipes) {
-		recipes.forEach(function(recipe) {
-		main.innerHTML += renderRecipeCard(recipe);
-	})
+		// vider le container à recettes avant mise à jour
+		main.innerHTML = "";
+		if (recipes.length > 0) {
+			recipes.forEach(function(recipe) {
+			main.innerHTML += renderRecipeCard(recipe);
+			})
+		}
+		else {
+			main.innerHTML = '<div class="no-result">aucun résultat ne correspond à votre recherche</div>';
+		}
 }
 
 
@@ -104,16 +110,13 @@ async function init() {
 	const recipes = await getAPI(api_url);
 	
 	// 2. création des array ingredients + appliances + ustensils + times	
-	// 3. création des dropdowns	
+	// 3. création des dropdowns
 	renderAlldropdowns(recipes);	
 
 	// 4. affichage recettes 
 	renderAllRecipes(recipes);
-
-	// 5. ouverture/fermeture/affichage dropdowns (inclus la recherche et selection des tags)
-	dropdownBehaviour();
 	
-	// 6. fonction recherche - filtrage des recettes
+	// 5. fonction recherche - filtrage des recettes
 	filterRecipes(recipes);
     
 }
