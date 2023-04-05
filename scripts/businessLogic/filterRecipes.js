@@ -5,17 +5,18 @@ import { renderAlldropdowns, renderAllRecipes } from "../index.js";
 // variables
 const mainSearch = document.querySelector(".global-search");
 const minCharacters = 3;
-let searchPast3 = false;
+let searchPastMin = false;
 
 
 
 
 // collection de listes filtrées qui s'actualise    
 let recipesListsCollection = {
-    // mainSearch: [],
-    // tagID1: [id, id, id, id, id],
-    // tagID2: [id, id],
-    // tagID3: [id, id, id]
+    mainSearch: [],
+    ingredients: [],
+    appliances: [],
+    ustensils: [],
+    times: []
 };
 
 
@@ -36,10 +37,26 @@ function filteredRecipesList(recipes, value) {
         const nameIncludes = recipe.name.toLowerCase().includes(value);
         const applianceIncludes = recipe.appliance.toLowerCase().includes(value);
         const descriptionIcludes = recipe.description.toLowerCase().includes(value);
-        const ingredientsIncludes = recipe.ingredients.forEach(ing => ing.ingredient.toLowerCase().includes(value));
+        const ingredientsIncludes = recipe.ingredients.some(ing => ing.ingredient.toLowerCase().includes(value)); // some()
 
         return nameIncludes || applianceIncludes || descriptionIcludes || ingredientsIncludes;
     })       
+}
+
+function filterByTag ( recipes, tagFamily, tagName) {
+    return recipes.filter(recipe => {
+        switch (tagFamily) {
+            case 'ingredients-selected' :
+                return recipe.ingredients.some(ing => ing.ingredient.toLowerCase() === tagName);
+            case 'appliances-selected' :
+                return recipe.appliance.toLowerCase() === tagName;
+            case 'ustensils-selected' :
+                return recipe.ustensils.some(u => u.toLowerCase() === tagName);
+
+
+        }
+
+    })
 }
 
 
@@ -61,7 +78,7 @@ export function filterRecipes(recipes) {
 
         // action de filtre au delà de 3 caractères
         if (mainSearchValue.length >= minCharacters) {            
-            searchPast3 = true;
+            searchPastMin = true;
 
             // mise à jour de 'mainsearch' dans la collection de listes
             recipesListsCollection.mainSearch = filteredRecipesList(recipes, mainSearchValue);
@@ -75,8 +92,8 @@ export function filterRecipes(recipes) {
             // renderAlldropdowns(intersection(recipesListsCollection));
             renderAlldropdowns(recipesListsCollection.mainSearch);
         }
-        else if (mainSearchValue.length === (minCharacters - 1) && searchPast3) { // retour en dessou de 3 caractères
-            searchPast3 = false;
+        else if (mainSearchValue.length <= (minCharacters - 1) && searchPastMin && recipesListsCollection.mainSearch.length === 0) { // retour en dessou de 3 caractères
+            searchPastMin = false;
             recipesListsCollection.mainSearch = recipes;
             console.log(recipesListsCollection)
             // en cas de search vide (ou moins de 3 caractères), remettre tous les tags
@@ -102,12 +119,21 @@ export function filterRecipes(recipes) {
             mutations.forEach(mutation => {
                 // effectuer une action en fonction de la mutation détectée
                 const selectedTags = Array.from(tagsFamily.querySelectorAll(".selected-tag"));
-                const tagsInfo = selectedTags.map(tag => ({ id: tag.id, text: tag.innerText }));
-                console.log(tagsInfo)                
+                const tagsInfo = selectedTags.map(tag => ({text: tag.innerText }));
+                console.log(tagsInfo)
+                
+                console.log(tagsFamily.id)
                 
                 // isolation de la famille et du nom du tag (ajouté ou supprimé)
 
                 // création ou suppresion de liste filtrée correspondant au tag
+
+                const result = filterByTag(recipes, tagsFamily.id, tagsInfo.toLowerCase());
+
+                recipesListsCollection.push(result)
+
+                // renderAllRecipes(result); // intersection
+                // renderAlldropdowns(result);
             });
         });
     
