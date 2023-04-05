@@ -169,7 +169,6 @@ export function dropdownBehaviour() {
             for(const mutation of mutationsList) {
                 if (mutation.type === 'childList') {
                     updatedTagSelection();                          
-                    console.log(`${selectedTagsFamily.id}: `, updatedTagSelection());
                     // au clic sur la croix d'un tag selectionné
                     updatedTagSelection().forEach(tag => {
                         const closeCross = tag.querySelector(".fa-times-circle");

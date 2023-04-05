@@ -7,6 +7,9 @@ const mainSearch = document.querySelector(".global-search");
 const minCharacters = 3;
 let searchPast3 = false;
 
+
+
+
 // collection de listes filtrées qui s'actualise    
 let recipesListsCollection = {
     // mainSearch: [],
@@ -29,7 +32,14 @@ function intersection(lists) {
 
 // retourne la liste de recettes en fonction de la valeur de l'input
 function filteredRecipesList(recipes, value) {
-    return recipes.filter(recipe => recipe.name.toLowerCase().includes(value))        
+    return recipes.filter(recipe => {
+        const nameIncludes = recipe.name.toLowerCase().includes(value);
+        const applianceIncludes = recipe.appliance.toLowerCase().includes(value);
+        const descriptionIcludes = recipe.description.toLowerCase().includes(value);
+        const ingredientsIncludes = recipe.ingredients.forEach(ing => ing.ingredient.toLowerCase().includes(value));
+
+        return nameIncludes || applianceIncludes || descriptionIcludes || ingredientsIncludes;
+    })       
 }
 
 
@@ -45,17 +55,13 @@ export function filterRecipes(recipes) {
 
     // eventListener 'input' éxécute son callback à chaque changement de value de l'input
     mainSearch.addEventListener('input', function() {
-
         // récupération de la chaine de 3 caractères ou +
-
         const mainSearchValue = mainSearch.value.toLowerCase();
+        console.log(mainSearchValue)
 
-        if (mainSearchValue.length >= minCharacters) {
-
-            console.log(mainSearchValue)
-            
+        // action de filtre au delà de 3 caractères
+        if (mainSearchValue.length >= minCharacters) {            
             searchPast3 = true;
-            console.log(searchPast3)
 
             // mise à jour de 'mainsearch' dans la collection de listes
             recipesListsCollection.mainSearch = filteredRecipesList(recipes, mainSearchValue);
@@ -69,29 +75,44 @@ export function filterRecipes(recipes) {
             // renderAlldropdowns(intersection(recipesListsCollection));
             renderAlldropdowns(recipesListsCollection.mainSearch);
         }
-        else if (mainSearchValue.length === (minCharacters - 1) && searchPast3) {
+        else if (mainSearchValue.length === (minCharacters - 1) && searchPast3) { // retour en dessou de 3 caractères
             searchPast3 = false;
+            recipesListsCollection.mainSearch = recipes;
+            console.log(recipesListsCollection)
             // en cas de search vide (ou moins de 3 caractères), remettre tous les tags
             renderAllRecipes(recipes);
             renderAlldropdowns(recipes);
         }        
-        
 
     });
 
 
-
-
-    // TAG SELECTION OBSERVER :
-    // /!\ possible de récupérer la liste des tags selectionnés depuis l'observer de dropdownBehaviour()
+    // EVENT TAG SELECTION/SUPPRESSION :    
 
     // détecteur d'action sur la selection de tags (selection ou suppression)
 
+    
 
-    // isolation de la famille et du nom du tag (ajouté ou supprimé)
+    // observer sur tagsFamily
+    const tagsFamilies = Array.from(document.querySelectorAll(".selected-tags-family"));
 
+    tagsFamilies.forEach(tagsFamily => {
+        
+        const observer = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                // effectuer une action en fonction de la mutation détectée
+                const selectedTags = Array.from(tagsFamily.querySelectorAll(".selected-tag"));
+                const tagsInfo = selectedTags.map(tag => ({ id: tag.id, text: tag.innerText }));
+                console.log(tagsInfo)                
+                
+                // isolation de la famille et du nom du tag (ajouté ou supprimé)
 
-    // création ou suppresion de liste filtrée correspondant au tag
+                // création ou suppresion de liste filtrée correspondant au tag
+            });
+        });
+    
+        observer.observe(tagsFamily, { childList: true });
+    });
 
 
 
