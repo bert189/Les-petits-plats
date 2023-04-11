@@ -2,6 +2,7 @@
 import { tagCountObserver } from "../utils/tagCountObserver.js";
 import { renderTagSelected } from "../components/renderTagSelected.js";
 import { createElement } from "../utils/createElement.js";
+import { addTagEvent, removeTagEvent } from "../businessLogic/filterRecipes.js";
 
 
 // cette fonction gère l'affichage + les events des dropdowns aux clics
@@ -16,7 +17,7 @@ export function dropdownBehaviour() {
         const chevronDown = dropdown.querySelector(".fa-chevron-down");
         const chevronUp = dropdown.querySelector(".fa-chevron-up");
         const specific = dropdown.querySelector(".specific");
-        const specificChevronDown = [specific, chevronDown];
+        const specificChevronDown = dropdown.querySelector(".specific-chevron-down-wrapper");
         const arrayTags = Array.from(dropdown.querySelectorAll(".tags .tag"));
         const searchTags = dropdown.querySelector(".search-tags-wrapper");
         const inputTagSearch = dropdown.querySelector(".specific-search");
@@ -48,21 +49,20 @@ export function dropdownBehaviour() {
 
         if (arrayTags.length === 0) { // cas ou la recherhce ne donne aucun résultat
             dropdown.classList.add("no-tags");
+            specificChevronDown.classList.add("specific-inactive");
             specific.classList.add("specific-inactive");
             chevronDown.classList.add("specific-inactive");
         }
         else {
-            specificChevronDown.forEach(element => {
-                element.addEventListener("click", function() {
+            specificChevronDown.addEventListener("click", function() {
                     
-                    specific.classList.add("display-none");
-                    searchTags.classList.remove("display-none");
-                    swapChevron();             
-                    tagCountObserver(dropdown, 15); // présentation 1 ou 2 colonnes au delà du nombre indiqué
-                    inputTagSearch.focus(); // optionnel, permet d'encourager la recherche
+                specific.classList.add("display-none");
+                searchTags.classList.remove("display-none");
+                swapChevron();             
+                tagCountObserver(dropdown, 15); // présentation 1 ou 2 colonnes au delà du nombre indiqué
+                inputTagSearch.focus(); // optionnel, permet d'encourager la recherche
 
-                })
-            })            
+            })                     
         }
         
         // au clic sur le chevron up -> fermeture
@@ -121,71 +121,73 @@ export function dropdownBehaviour() {
         // EVENTS TAGS :
 
         // création des conteneurs de famille de tag selectionnés
-        const selectedTagsFamily = createElement("div", {class: "selected-tags-family", id:`${dropdown.id}-selected`});
-        selectedTags.appendChild(selectedTagsFamily);      
+        let selectedTagsFamily;
+
+        if (selectedTags.childElementCount < 4) { // afin de ne pas générer des nouveaux contereurs Family à chaque rendu
+            selectedTagsFamily = createElement("div", {class: "selected-tags-family", id: `${dropdown.id}-selected`});
+            selectedTags.appendChild(selectedTagsFamily);
+        } else {
+            selectedTagsFamily = selectedTags.querySelector(`#${dropdown.id}-selected`);
+        }
+
+        // mise à jour de le liste des tags selectionnés
+        function updatedTagSelection() {
+            const currentTagSelection = Array.from(selectedTagsFamily.querySelectorAll(".selected-tag"));
+            return currentTagSelection;
+        }
         
+        // au render des dropdown : griser les tags déjà selectionnés
+        updatedTagSelection().forEach(selectedTag => {
+            tagArray.forEach(tag => {
+                if (tag.textContent === selectedTag.textContent) {
+                    tag.classList.add("already-selected"); 
+                }
+            })
+        });       
+
+        
+        // HELPERS
         // affichage du tag selectionné
-        function selectTag(tag) {
-            if (dropdown.classList.contains("unique-tag-choice") && selectedTagsFamily.childNodes.length > 0) {
-                // si le choix de tag est unique, il faut préalablement supprimer le choix déjà éxistant
-                const currentTag = selectedTagsFamily.firstElementChild;
-                unselectTag(currentTag);
-                tag.classList.add("already-selected");
-            }
-            tag.classList.add("already-selected");
+        function selectTag(tag) {            
+            // tag.classList.add("already-selected"); // inutile car dropdownBehaviour() est relancée à chaque renderAll()
+             
             const selectedTag = {
-                "id": `${tag.id}-selected`,
                 "name": `${tag.innerText}`,
                 "color": `${dropdown.style.backgroundColor}`                
             }
             selectedTagsFamily.innerHTML += renderTagSelected(selectedTag);
         }
         
-
         // suppression d'un tag selectionné
         function unselectTag(selectedTag) {
-            const correspondingTag = tagArray.find(correspondingTag => correspondingTag.id === selectedTag.id.slice(0, -9));
+            const correspondingTag = tagArray.find(correspondingTag => correspondingTag.textContent === selectedTag.textContent);
             correspondingTag.classList.remove("already-selected");
             selectedTagsFamily.removeChild(selectedTag); // tag.parentNode.removeChild(tag);
         }
 
+        // EVENTS
         // au clic sur un tag dans le dropdown
         tagArray.forEach(tag => {
             tag.addEventListener("click", function() {
+                const tagFamily = tag.parentElement.parentElement.parentElement.id;
+                const tagName = tag.textContent.toLowerCase();
                 selectTag(tag);
+                addTagEvent(tagFamily, tagName);
             })
         });
-    
-        // mise à jour de le liste des tags selectionnés (via observer)
-        function updatedTagSelection() {
-            const currentTagSelection = Array.from(selectedTagsFamily.querySelectorAll(".selected-tag"));
-            return currentTagSelection;
-        }
-        // OBSERVER (merci ChatGPT) réagit à chaque modification de tagList :
-        // options de configuration de l'observer
-        const config = { childList: true };
-        // fonction de rappel appelée à chaque changement dans la liste des tags selectionnés 
-        const callback = function(mutationsList) {
-            for(const mutation of mutationsList) {
-                if (mutation.type === 'childList') {
-                    updatedTagSelection();
-                    console.log(updatedTagSelection())                        
-                    // au clic sur la croix d'un tag selectionné
-                    updatedTagSelection().forEach(tag => {
-                        const closeCross = tag.querySelector(".fa-times-circle");
-                        closeCross.addEventListener("click", function() {
-                            if (selectedTagsFamily.contains(tag) && tag.parentNode !== null) {                                
-                                unselectTag(tag);
-                            }
-                        });
-                    });  
+        
+        // au clic sur la croix de suppression du tag selectionné :        
+        updatedTagSelection().forEach(selectedTag => {
+            const closeCross = selectedTag.querySelector(".fa-times-circle");
+            closeCross.addEventListener("click", function() {
+                if (selectedTagsFamily.contains(selectedTag) && selectedTag.parentNode !== null) {
+                    const tagName = selectedTag.textContent.toLocaleLowerCase();
+                    const tagFamily = selectedTag.parentElement.id.slice(0, -9);                         
+                    unselectTag(selectedTag);
+                    removeTagEvent(tagFamily, tagName);
                 }
-            };
-        }
-        // création de l'observer avec la fonction de rappel et les options de configuration
-        const observer = new MutationObserver(callback);
-        observer.observe(selectedTagsFamily, config);
-
+            });
+        });
 
 
     })

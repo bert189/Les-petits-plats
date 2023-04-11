@@ -1,21 +1,15 @@
 // rendu des menus déroulants
 
-export function createDropdown(specificName, id, backgroundColor, placeholder, size, tagList, uniqueTagChoice) {
+export function createDropdown(specificName, id, backgroundColor, placeholder, size, tagList) {
 
     const singularSpecific = id.slice(0, -1);
     let HTMLtagList = '';
-    let index = 1;
 
     tagList.forEach(tag => {
-        HTMLtagList += `<li class="tag" id="${singularSpecific}-${index++}">${tag}</li>`;  
+        HTMLtagList += `<li class="tag ${singularSpecific}-tag">${tag}</li>`;  
     });
 
-    let classUnique = "";
-    if (uniqueTagChoice) {
-        classUnique = "unique-tag-choice";
-    }
-
-    return `<div class="specific-dropdown ${classUnique}" id="${id}" style="background-color: ${backgroundColor}">
+    return `<div class="specific-dropdown" id="${id}" style="background-color: ${backgroundColor}">
                 <div class="specific-chevron-down-wrapper">
                     <div class="specific">${specificName}</div>
                     <i class="fas fa-chevron-down"></i>
