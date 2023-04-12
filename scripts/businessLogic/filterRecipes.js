@@ -17,15 +17,31 @@ let recipesLists = [];
 
 function filterBySearch(recipes, value) {
 
-    const filteredRecipes = recipes.filter(recipe => {
+    const filteredRecipes = [];
 
-        const nameIncludesValue = recipe.name.toLowerCase().includes(value);
-        const applianceIncludesValue = recipe.appliance.toLowerCase().includes(value);
-        const descriptionIncludesValue = recipe.description.toLowerCase().includes(value);
-        const ingredientsIncludesValue = recipe.ingredients.some(ing => ing.ingredient.toLowerCase().includes(value)); // some()
+    let i= 0;
+    while (i < recipes.length) {
+        
+        const nameIncludesValue = recipes[i].name.toLowerCase().includes(value);
+        const applianceIncludesValue = recipes[i].appliance.toLowerCase().includes(value);
+        const descriptionIncludesValue = recipes[i].description.toLowerCase().includes(value);
 
-        return nameIncludesValue || applianceIncludesValue || descriptionIncludesValue || ingredientsIncludesValue;
-    })
+        let j = 0;
+        let ingredientsIncludesValue = false;
+        while (j < recipes[i].ingredients.length) {
+            ingredientsIncludesValue = recipes[i].ingredients[j].ingredient.toLowerCase().includes(value);
+            if (ingredientsIncludesValue === true) {
+                break;                     
+            }
+            j++;
+        }
+
+        if(nameIncludesValue || applianceIncludesValue || descriptionIncludesValue || ingredientsIncludesValue) {
+            filteredRecipes.push(recipes[i]);
+        }
+
+        i++;
+    }
     
     return filteredRecipes;
 }
