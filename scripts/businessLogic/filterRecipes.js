@@ -147,12 +147,12 @@ export function removeTagEvent(tagFamily, tagName) {
 
     // recipesLists = recipesLists.filter(recipeList => recipeList !== tagCorrespondingList); // ne fonctionne pas, d'où JSON.stringify :
     // évite de supprimer la liste 'search' si elle est identique à celle du tag
-    const tagFiltersLists = recipesLists.slice(1).filter(recipeList => JSON.stringify(recipeList) !== JSON.stringify(tagCorrespondingList));
+    const tagFiltersLists = recipesLists.slice(1);
     // évite de supprimer 2 listes ou + en cas de listes de tagFilter identiques
     // Recherche de l'index de la première liste qui correspond. findIndex(condition = true) s'arrête au premier index répondant à la condition
     const index = tagFiltersLists.findIndex(list => JSON.stringify(list) === JSON.stringify(tagCorrespondingList));
     // suppression de la liste correspondante
-    tagFiltersLists.splice(index, 1); 
+    tagFiltersLists.splice(index, 1);
 
     recipesLists = [recipesLists[0], ...tagFiltersLists];
     console.log(recipesLists)
