@@ -98,20 +98,16 @@ export function searchEvent(recipes) {
 
             // mise à jour de l'index zéro (réservé au filtre 'search') la collection de listes
             recipesLists[0] = (filterBySearch(recipes, searchValue));
-            console.log(recipesLists)
-
-            // mise à jour de l'affichage des recettes à chaque changement de valeur                
-            renderAll(intersection(recipesLists));
+            console.log(recipesLists)                           
 
         }
         else { // en dessous de 3 caractères
-
             recipesLists[0] = recipes;
-            console.log(recipesLists)
-            // en cas de search vide (ou moins de 3 caractères), remettre tous les tags
-            renderAll(intersection(recipesLists));
-        }       
-        
+            console.log(recipesLists)            
+        }
+
+        // mise à jour de l'affichage des recettes à chaque changement de valeur        
+        renderAll(intersection(recipesLists));
     });
     
 }
