@@ -19,28 +19,28 @@ function filterBySearch(recipes, value) {
 
     const filteredRecipes = [];
 
-    let i= 0;
-    while (i < recipes.length) {
+    for (let i = 0; i < recipes.length; i++) {
         
-        const nameIncludesValue = recipes[i].name.toLowerCase().includes(value);
-        const applianceIncludesValue = recipes[i].appliance.toLowerCase().includes(value);
-        const descriptionIncludesValue = recipes[i].description.toLowerCase().includes(value);
-
-        let j = 0;
-        let ingredientsIncludesValue = false;
-        while (j < recipes[i].ingredients.length) {
-            ingredientsIncludesValue = recipes[i].ingredients[j].ingredient.toLowerCase().includes(value);
-            if (ingredientsIncludesValue === true) {
-                break;                     
-            }
-            j++;
-        }
-
-        if(nameIncludesValue || applianceIncludesValue || descriptionIncludesValue || ingredientsIncludesValue) {
+        if (recipes[i].name.toLowerCase().includes(value)) {
             filteredRecipes.push(recipes[i]);
         }
-
-        i++;
+        else if (recipes[i].appliance.toLowerCase().includes(value)) {
+            filteredRecipes.push(recipes[i]);
+        }
+        else if (recipes[i].description.toLowerCase().includes(value)) {
+            filteredRecipes.push(recipes[i]);
+        }
+        else {
+            let j = 0;
+            while (j < recipes[i].ingredients.length) {
+                recipes[i].ingredients[j].ingredient.toLowerCase().includes(value)
+                if (recipes[i].ingredients[j].ingredient.toLowerCase().includes(value)) {
+                    filteredRecipes.push(recipes[i]);  
+                    break;              
+                }
+                j++;
+            }
+        }
     }
     
     return filteredRecipes;
