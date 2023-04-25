@@ -83,28 +83,20 @@ function intersection(recipesLists) {
 export function searchEvent(recipes) {
 
     recipesLists[0] = recipes;
-    console.log(recipesLists)
-
     // EVENT MAIN SEARCH :    
 
     // eventListener 'input' éxécute son callback à chaque changement de value de l'input
     mainSearch.addEventListener('input', function() {
         // récupération de la chaine de 3 caractères ou +
         const searchValue = mainSearch.value.toLowerCase();
-        console.log("recherche :", searchValue)
-
         // action de filtre au delà de 3 caractères
         if (searchValue.length >= minCharacters) {            
 
             // mise à jour de l'index zéro (réservé au filtre 'search') la collection de listes
             recipesLists[0] = (filterBySearch(recipes, searchValue));
-            console.log(recipesLists)                           
-
         }
         else { // en dessous de 3 caractères
-            recipesLists[0] = recipes;
-            console.log(recipesLists)            
-        }
+            recipesLists[0] = recipes;        }
 
         // mise à jour de l'affichage des recettes à chaque changement de valeur        
         renderAll(intersection(recipesLists));
@@ -120,12 +112,8 @@ export function searchEvent(recipes) {
 
 export function addTagEvent(tagFamily, tagName) {        
 
-    console.log("tag ajouté :", tagFamily, tagName)
-
     // update liste de recettes
     recipesLists.push(filterByTag(allRecipes, tagFamily, tagName)); // allRecipes variable globale totalité des recettes
-    console.log(recipesLists)
-
     // affichage :
     renderAll(intersection(recipesLists));
 
@@ -136,8 +124,6 @@ export function addTagEvent(tagFamily, tagName) {
 
 export function removeTagEvent(tagFamily, tagName) {      
         
-    console.log("tag supprimé :", tagFamily, tagName)
-
     // update liste de recettes
     const tagCorrespondingList = filterByTag(allRecipes, tagFamily, tagName); // allRecipes variable globale
 
@@ -151,8 +137,6 @@ export function removeTagEvent(tagFamily, tagName) {
     tagFiltersLists.splice(index, 1);
 
     recipesLists = [recipesLists[0], ...tagFiltersLists];
-    console.log(recipesLists)
-
     // affichage :
     renderAll(intersection(recipesLists));
 
